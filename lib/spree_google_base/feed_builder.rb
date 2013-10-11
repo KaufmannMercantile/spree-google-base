@@ -11,6 +11,12 @@ module SpreeGoogleBase
         builder.generate_and_transfer_store
       end
     end
+
+    def self.generate_adroll
+      self.builders.each do |builder|
+        builder.generate_and_transfer_adroll
+      end
+    end
     
     def self.builders
       if defined?(Spree::Store)
@@ -49,6 +55,17 @@ module SpreeGoogleBase
       transfer_xml
       cleanup_xml
     end
+
+    def generate_and_transfer_adroll
+      delete_xml_if_exists
+
+      File.open(path, 'w') do |file| 
+        generate_xml file
+      end
+
+      transfer_xml_adroll
+      cleanup_xml
+    end
     
     def path
       "#{::Rails.root}/tmp/#{filename}"
@@ -84,6 +101,21 @@ module SpreeGoogleBase
       ftp = Net::FTP.new('uploads.google.com')
       ftp.passive = true
       ftp.login(Spree::GoogleBase::Config[:ftp_username], Spree::GoogleBase::Config[:ftp_password])
+      ftp.put(path, filename)
+      ftp.quit
+
+      # for adrolL
+      ftp = Net::FTP.new('kaufmann-mercantile.com')
+      ftp.passive = true
+      ftp.login('adroll@kaufmann-mercantile.com', 'g00gl3f33d')
+      ftp.put(path, filename)
+      ftp.quit
+    end
+
+    def transfer_xml_adroll
+      ftp = Net::FTP.new('kaufmann-mercantile.com')
+      ftp.passive = true
+      ftp.login('adroll@kaufmann-mercantile.com', 'g00gl3f33d')
       ftp.put(path, filename)
       ftp.quit
     end
