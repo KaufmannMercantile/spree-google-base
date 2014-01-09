@@ -131,7 +131,11 @@ module SpreeGoogleBase
         
         GOOGLE_BASE_ATTR_MAP.each do |k, v|
           value = product.send(v)
-          xml.tag!(k, value.to_s) if value.present?
+          if k == 'price'
+	          xml.tag!(k, sprintf("%.02f", value)) if value.present?
+          else
+	          xml.tag!(k, value.to_s) if value.present?
+	        end  
         end
       end
     end
