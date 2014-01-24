@@ -133,6 +133,8 @@ module SpreeGoogleBase
           value = product.send(v)
           if k == 'g:price'
 	          xml.tag!(k, sprintf("%.02f", value)) if value.present?
+          elsif k == 'g:brand'
+          	xml.tag!(k, 'Kaufmann Mercantile')
           else
 	          xml.tag!(k, value.to_s) if value.present?
 	        end  
