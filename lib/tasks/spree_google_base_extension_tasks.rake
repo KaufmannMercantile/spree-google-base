@@ -7,4 +7,7 @@ namespace :spree_google_base do
   task :generate_adroll => [:environment] do |t, args|
     SpreeGoogleBase::FeedBuilder.generate_adroll
   end
+  task :generate_impactradius => [:environment] do |t, args|
+    SpreeGoogleBase::FeedBuilder.generate_impactradius
+  end
 end

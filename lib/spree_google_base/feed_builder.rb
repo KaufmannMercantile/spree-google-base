@@ -17,6 +17,12 @@ module SpreeGoogleBase
         builder.generate_and_transfer_adroll
       end
     end
+
+    def self.generate_impactradius
+      self.builders.each do |builder|
+        builder.generate_and_transfer_impactradius
+      end
+    end
     
     def self.builders
       if defined?(Spree::Store)
@@ -66,6 +72,17 @@ module SpreeGoogleBase
       transfer_xml_adroll
       cleanup_xml
     end
+
+    def generate_and_transfer_impactradius
+      delete_xml_if_exists
+
+      File.open(path, 'w') do |file| 
+        generate_xml file
+      end
+
+      transfer_xml_impactradius
+      cleanup_xml
+    end
     
     def path
       "#{::Rails.root}/tmp/#{filename}"
@@ -103,8 +120,9 @@ module SpreeGoogleBase
       ftp.login(Spree::GoogleBase::Config[:ftp_username], Spree::GoogleBase::Config[:ftp_password])
       ftp.put(path, filename)
       ftp.quit
+    end
 
-      # for adrolL
+    def transfer_xml_adroll
       ftp = Net::FTP.new('kaufmann-mercantile.com')
       ftp.passive = true
       ftp.login('adroll@kaufmann-mercantile.com', 'g00gl3f33d')
@@ -112,10 +130,10 @@ module SpreeGoogleBase
       ftp.quit
     end
 
-    def transfer_xml_adroll
-      ftp = Net::FTP.new('kaufmann-mercantile.com')
+    def transfer_xml_impactradius
+      ftp = Net::FTP.new('products.impactradius.com')
       ftp.passive = true
-      ftp.login('adroll@kaufmann-mercantile.com', 'g00gl3f33d')
+      ftp.login('ps-ftp_101028_2891', '3WrULQDp5h')
       ftp.put(path, filename)
       ftp.quit
     end
