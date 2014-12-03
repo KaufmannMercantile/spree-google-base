@@ -10,4 +10,7 @@ namespace :spree_google_base do
   task :generate_impactradius => [:environment] do |t, args|
     SpreeGoogleBase::FeedBuilder.generate_impactradius
   end
+  task :generate_bing => [:environment] do |t, args|
+    SpreeGoogleBase::FeedBuilder.generate_bing
+  end
 end

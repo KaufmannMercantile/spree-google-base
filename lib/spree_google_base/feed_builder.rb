@@ -23,6 +23,12 @@ module SpreeGoogleBase
         builder.generate_and_transfer_impactradius
       end
     end
+
+    def self.generate_bing
+      self.builders.each do |builder|
+        builder.generate_and_transfer_bing
+      end
+    end
     
     def self.builders
       if defined?(Spree::Store)
@@ -73,6 +79,17 @@ module SpreeGoogleBase
       cleanup_xml
     end
 
+    def generate_and_transfer_bing
+      delete_xml_if_exists
+
+      File.open(path, 'w') do |file| 
+        generate_xml file
+      end
+
+      transfer_xml_bing
+      #cleanup_xml
+    end
+
     def generate_and_transfer_impactradius
       delete_xml_if_exists
 
@@ -105,6 +122,7 @@ module SpreeGoogleBase
           build_meta(xml)
           
           ar_scope.find_each(:batch_size => 300) do |product|
+            next if product.description.nil? or product.description.length > 8192 or product.master.images.empty?
             build_product(xml, product)
           end
         end
@@ -126,6 +144,14 @@ module SpreeGoogleBase
       ftp = Net::FTP.new('kaufmann-mercantile.com')
       ftp.passive = true
       ftp.login('adroll@kaufmann-mercantile.com', 'g00gl3f33d')
+      ftp.put(path, filename)
+      ftp.quit
+    end
+
+    def transfer_xml_bing
+      ftp = Net::FTP.new('feeds.adcenter.microsoft.com')
+      ftp.passive = true
+      ftp.login('kaufmann', 'b!ngf33d')
       ftp.put(path, filename)
       ftp.quit
     end
