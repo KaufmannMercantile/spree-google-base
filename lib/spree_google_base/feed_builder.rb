@@ -3,33 +3,15 @@ require 'net/ftp'
 module SpreeGoogleBase
   class FeedBuilder
     include Spree::Core::Engine.routes.url_helpers
-    
+
     attr_reader :store, :domain, :title
-    
+
     def self.generate_and_transfer
       self.builders.each do |builder|
         builder.generate_and_transfer_store
       end
     end
 
-    def self.generate_adroll
-      self.builders.each do |builder|
-        builder.generate_and_transfer_adroll
-      end
-    end
-
-    def self.generate_impactradius
-      self.builders.each do |builder|
-        builder.generate_and_transfer_impactradius
-      end
-    end
-
-    def self.generate_bing
-      self.builders.each do |builder|
-        builder.generate_and_transfer_bing
-      end
-    end
-    
     def self.builders
       if defined?(Spree::Store)
         Spree::Store.all.map{ |store| self.new(:store => store) }
@@ -39,14 +21,9 @@ module SpreeGoogleBase
     end
 
     def initialize(opts = {})
-      raise "Please pass a public address as the second argument, or configure :public_path in Spree::GoogleBase::Config" unless
-        opts[:store].present? or (opts[:path].present? or Spree::GoogleBase::Config[:public_domain])
-
       @store = opts[:store] if opts[:store].present?
-      @title = @store ? @store.name : Spree::GoogleBase::Config[:store_name]
       
       @domain = @store ? @store.domains.match(/[\w\.]+/).to_s : opts[:path]
-      @domain ||= Spree::GoogleBase::Config[:public_domain]
     end
     
     def ar_scope
@@ -67,46 +44,13 @@ module SpreeGoogleBase
       transfer_xml
       cleanup_xml
     end
-
-    def generate_and_transfer_adroll
-      delete_xml_if_exists
-
-      File.open(path, 'w') do |file| 
-        generate_xml file
-      end
-
-      transfer_xml_adroll
-      cleanup_xml
-    end
-
-    def generate_and_transfer_bing
-      delete_xml_if_exists
-
-      File.open(path, 'w') do |file| 
-        generate_xml file
-      end
-
-      transfer_xml_bing
-      #cleanup_xml
-    end
-
-    def generate_and_transfer_impactradius
-      delete_xml_if_exists
-
-      File.open(path, 'w') do |file| 
-        generate_xml file
-      end
-
-      transfer_xml_impactradius
-      cleanup_xml
-    end
     
     def path
       "#{::Rails.root}/tmp/#{filename}"
     end
     
     def filename
-      "google_base_v#{@store.try(:code)}.xml"
+      "google_base_test#{@store.try(:code)}.xml"
     end
 
     def delete_xml_if_exists
@@ -128,40 +72,16 @@ module SpreeGoogleBase
         end
       end
     end
-    
+
     def transfer_xml
-      raise "Please configure your Google Base :ftp_username and :ftp_password by configuring Spree::GoogleBase::Config" unless
-        Spree::GoogleBase::Config[:ftp_username] and Spree::GoogleBase::Config[:ftp_password]
-      
-      ftp = Net::FTP.new('uploads.google.com')
-      ftp.passive = true
-      ftp.login(Spree::GoogleBase::Config[:ftp_username], Spree::GoogleBase::Config[:ftp_password])
-      ftp.put(path, filename)
-      ftp.quit
-    end
-
-    def transfer_xml_adroll
-      ftp = Net::FTP.new('kaufmann-mercantile.com')
-      ftp.passive = true
-      ftp.login('adroll@kaufmann-mercantile.com', 'g00gl3f33d')
-      ftp.put(path, filename)
-      ftp.quit
-    end
-
-    def transfer_xml_bing
-      ftp = Net::FTP.new('feeds.adcenter.microsoft.com')
-      ftp.passive = true
-      ftp.login('kaufmann', 'b!ngf33d')
-      ftp.put(path, filename)
-      ftp.quit
-    end
-
-    def transfer_xml_impactradius
-      ftp = Net::FTP.new('products.impactradius.com')
-      ftp.passive = true
-      ftp.login('ps-ftp_101028_2891', '3WrULQDp5h')
-      ftp.put(path, filename)
-      ftp.quit
+      export_locations = Spree::GoogleBaseExportLocation.all
+      export_locations.each do |export_location|
+        ftp = Net::FTP.new(export_location[:hostname])
+        ftp.passive = true
+        ftp.login(export_location[:username], export_location[:password])
+        ftp.put(path, filename)
+        ftp.quit
+      end
     end
     
     def cleanup_xml
@@ -185,7 +105,7 @@ module SpreeGoogleBase
         end
       end
     end
-    
+
     def build_images(xml, product)
       main_image, *more_images = product.master.images
 

@@ -1,0 +1,18 @@
+<%= render :partial => 'spree/admin/shared/configuration_menu' %>
+
+<% content_for :page_title do %>
+  <%= Spree.t("google_base.export_settings") %>
+<% end %>
+
+<% content_for :page_actions do %>
+  <ul class="actions inline-menu">
+    <li>
+      <%= button_link_to Spree.t("google_base.new_export_location"), new_object_url, { :icon => 'icon-plus', :id => 'admin_new_google_base_export_location' } %>
+    </li>
+  </ul>
+<% end %>
+
+<% if @export_locations.any? %>
+<% else %>
+  <i><%= Spree.t("google_base.no_export_locations") %></i>
+<% end %>

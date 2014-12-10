@@ -1,0 +1,22 @@
+<div data-hook="admin_google_base_export_locations_form_fields" class="row">
+  <div class="row">
+    <div class="alpha twelve columns">
+      <%= f.field_container :name do %>
+        <%= f.label :name %><span class="required">*</span><br />
+        <%= f.text_field :name, :class => 'fullwidth' %>
+      <% end %><br />
+      <%= f.field_container :hostname do %>
+        <%= f.label :hostname %><span class="required">*</span><br />
+        <%= f.text_field :hostname, :class => 'fullwidth' %>
+      <% end %><br />
+      <%= f.field_container :username do %>
+        <%= f.label :username %><span class="required">*</span><br />
+        <%= f.text_field :username, :class => 'fullwidth' %>
+      <% end %><br />
+      <%= f.field_container :password do %>
+        <%= f.label :password %><span class="required">*</span><br />
+        <%= f.password_field :password, :class => 'fullwidth' %>
+      <% end %>
+    </div>
+  </div>
+</div>
