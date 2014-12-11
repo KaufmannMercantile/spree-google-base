@@ -1,13 +1,13 @@
 Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.name        = 'spree_google_base'
-  s.version     = '1.0.0'
+  s.version     = '2.0.0'
   s.summary     = 'Google Base for Spree'
   s.description = 'Provide rake task to generate XML for Google Base and so on.'
   s.required_ruby_version = '>= 1.8.7'
 
-  s.authors     = ['Steph Skardal', 'Ryan Siddle', 'Roman Smirnov', 'Denis Ivanov']
-  s.homepage          = 'http://github.com/jumph4x/spree-google-base'
+  s.authors     = ['Steph Skardal', 'Ryan Siddle', 'Roman Smirnov', 'Denis Ivanov', 'Joshua K. Farrar', 'Pras Malla']
+  s.homepage          = 'https://github.com/kaufmannmercantile/spree-google-base'
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
