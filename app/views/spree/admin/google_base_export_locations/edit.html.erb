@@ -1,7 +1,7 @@
 <%= render :partial => 'spree/admin/shared/configuration_menu' %>
 
 <% content_for :page_title do %>
-  <%= Spree.t("google_base.export_settings") %>
+  <%= Spree.t("export_settings", :scope => :google_base) %>
 <% end %>
 
 <%= form_for [:admin, @export_location], :method => :put do |f| %>

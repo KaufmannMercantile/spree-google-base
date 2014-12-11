@@ -1,0 +1,18 @@
+<%= render :partial => 'spree/admin/shared/configuration_menu' %>
+
+<% content_for :page_title do %>
+  <%= Spree.t("export_settings", :scope => :google_base) %>
+<% end %>
+
+<table>
+  <% [:title, :public_domain, :description, :enable_taxon_mapping].each do |setting| %>
+    <%= setting_presentation_row(setting) %>
+  <% end %>
+</table>
+
+<p>
+  <%= link_to_with_icon 'edit', t("edit"), edit_admin_google_base_settings_path %>
+  <% if Spree::GoogleBase::Config[:enable_taxon_mapping] %>
+    <%= link_to_with_icon 'edit', Spree.t("manage_taxon_mapping", :scope => :google_base), admin_taxon_map_index_path %>
+  <% end %>
+</p>

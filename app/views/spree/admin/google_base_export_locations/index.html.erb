@@ -1,13 +1,13 @@
 <%= render :partial => 'spree/admin/shared/configuration_menu' %>
 
 <% content_for :page_title do %>
-  <%= Spree.t("google_base.export_settings") %>
+  <%= Spree.t("export_settings", :scope => :google_base) %>
 <% end %>
 
 <% content_for :page_actions do %>
   <ul class="actions inline-menu">
     <li>
-      <%= button_link_to Spree.t("google_base.new_export_location"), new_object_url, { :icon => 'icon-plus', :id => 'admin_new_export_location' } %>
+      <%= button_link_to Spree.t("new_export_location", :scope => :google_base), new_object_url, { :icon => 'icon-plus', :id => 'admin_new_export_location' } %>
     </li>
   </ul>
 <% end %>
@@ -40,5 +40,5 @@
     </tbody>
   </table>
 <% else %>
-  <i><%= Spree.t("google_base.no_export_locations") %></i>
+  <i><%= Spree.t("no_export_locations", :scope => :google_base) %></i>
 <% end %>

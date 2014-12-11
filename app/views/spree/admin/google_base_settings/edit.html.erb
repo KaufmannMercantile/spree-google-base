@@ -1,0 +1,22 @@
+<%= render :partial => 'spree/admin/shared/configuration_menu' %>
+
+<% content_for :page_title do %>
+  <%= Spree.t("export_settings", :scope => :google_base) %>
+<% end %>
+
+<%= form_tag(admin_google_base_settings_path, :method => :put) do |f| %>
+  <% [:title, :public_domain, :description, :enable_taxon_mapping].each do |setting| %>
+    <p><%= setting_field(setting) %></p>
+  <% end %>
+
+  <p class="form-buttons">
+    <%= button t('update') %> 
+    <%= t("or") %> <%= link_to t("cancel"), admin_google_base_settings_url %>
+  </p>
+<% end %>
+
+<% content_for :head do %>
+  <style>
+    .edit_google_base_configuration input { width: 250px; }
+  </style>
+<% end %>
