@@ -21,9 +21,14 @@ module SpreeGoogleBase
     end
 
     def initialize(opts = {})
+      raise "Please pass a public address as the second argument, or configure :public_path in Spree::GoogleBase::Config" unless
+        opts[:store].present? or (opts[:path].present? or Spree::GoogleBase::Config[:public_domain])
+
       @store = opts[:store] if opts[:store].present?
+      @title = @store ? @store.name : Spree::GoogleBase::Config[:store_name]
       
       @domain = @store ? @store.domains.match(/[\w\.]+/).to_s : opts[:path]
+      @domain ||= Spree::GoogleBase::Config[:public_domain]
     end
     
     def ar_scope
