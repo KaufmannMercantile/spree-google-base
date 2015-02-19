@@ -71,7 +71,7 @@ module SpreeGoogleBase
           build_meta(xml)
           
           ar_scope.find_each(:batch_size => 300) do |product|
-            next if product.description.nil? or product.description.length > 8192 or product.master.images.empty?
+            next if product.description.nil? or product.description.length > 8192 or product.master.images.empty? or !product.available?
             build_product(xml, product)
           end
         end
@@ -102,8 +102,6 @@ module SpreeGoogleBase
           value = product.send(v)
           if k == 'g:price'
 	          xml.tag!(k, sprintf("%.02f", value)) if value.present?
-          elsif k == 'g:brand'
-          	xml.tag!(k, 'Kaufmann Mercantile')
           else
 	          xml.tag!(k, value.to_s) if value.present?
 	        end  

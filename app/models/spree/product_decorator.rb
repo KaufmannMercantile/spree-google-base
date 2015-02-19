@@ -32,7 +32,7 @@ module Spree
         }
       )
 
-      pp ? pp.value : nil
+      pp ? pp.value : 'Kaufmann Mercantile'
     end
 
     def google_base_product_type
